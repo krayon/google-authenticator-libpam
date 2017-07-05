@@ -1,6 +1,6 @@
 AC_PREREQ(2.61)
-AC_INIT(google-authenticator, 1.03, habets@google.com)
-AC_CONFIG_SRCDIR([src/google-authenticator.c])
+AC_INIT(libpam-otp, 1.03, krayon.git@qdnx.org)
+AC_CONFIG_SRCDIR([src/otp-config.c])
 AC_CONFIG_AUX_DIR([build])
 AC_CONFIG_MACRO_DIR([build])
 

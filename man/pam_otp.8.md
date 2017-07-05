@@ -1,23 +1,23 @@
-% PAM_GOOGLE_AUTHENTICATOR(8) Google Authenticator PAM module manual
+% PAM_OTP(8) OTP PAM module manual
 
 # NAME
 
-pam_google_authenticator - PAM module for Google two-factor authentication
+pam_otp - PAM module for OTP two-factor authentication
 
 # SYNOPSIS
 
-**pam_google_authenticator.so** [secret=*file*] [authtok_prompt=*prompt*]
+**pam_otp.so** [secret=*file*] [authtok_prompt=*prompt*]
 [user=*username*] [no_strict_owner] [allowed_perm=*0nnn*] [debug]
 [try_first_pass|use_first_pass|forward_pass] [noskewadj] [no_increment_hotp]
 [nullok] [echo_verification_code]
 
 # DESCRIPTION
 
-The **pam_google_authenticator** module is designed to protect user
+The **pam_otp** module is designed to protect user
 authentication with a second factor, either time-based (TOTP) or counter-based
 (HOTP). Prior logging in, the user will be asked for both its password and a
-one-time code. Such one-time codes can be generated with the Google
-Authenticator application, installed on the user's Android device. To
+one-time code. Such one-time codes can be generated with the OTP
+Config application, installed on the user's Android device. To
 respectively generate and verify those one-time codes, a secret key (randomly
 generated) must be shared between the device on which one-time codes are
 generated and the system on which this PAM module is enabled.
@@ -25,7 +25,7 @@ generated and the system on which this PAM module is enabled.
 Depending on its configuration (see *options* section), this module requires
 that a secret file is manually set up for each account on the system. This
 secret file holds the secret key and user-specific options (see
-**google-authenticator**(1)). Unless the **nullok** option is used,
+**otp-config**(1)). Unless the **nullok** option is used,
 authentication tries will be rejected if such secret file doesn't exist.
 Alternatively, a system administrator may create those secret files on behalf
 of the users and then communicates to them the secret keys.
@@ -36,7 +36,7 @@ secret=*file*
 :   Specify a non-standard file location for the secret file.
 
     By default, the PAM module looks for the secret file in the
-    `.google_authenticator` file within the home of the user logging in. This
+    `.otp_config` file within the home of the user logging in. This
     option overrides this location.
 
     The provided location may include the following short-hands:
@@ -134,16 +134,16 @@ or an error was encountered.
 
 The following lines may be used to enable this PAM module:
 
-- `auth required pam_google_authenticator.so no_increment_hotp` # Make sure the
+- `auth required pam_otp.so no_increment_hotp` # Make sure the
 counter (for HOTP mode) isn't incremented for failed attempts.
-- `auth required pam_google_authenticator.so nullok` # Allow users to log in if
+- `auth required pam_otp.so nullok` # Allow users to log in if
 their secret files don't exist
-- `auth required pam_google_authenticator.so
-secret=/var/unencrypted-home/${USER}/.google_authenticator` # Store secret
+- `auth required pam_otp.so
+secret=/var/unencrypted-home/${USER}/.otp_config` # Store secret
 files in a specific location
-- `auth required pam_google_authenticator.so [authtok_prompt=Your secret token:
+- `auth required pam_otp.so [authtok_prompt=Your secret token:
 ]` # Use a specific prompt
-- `auth required pam_google_authenticator.so noskewadj` # Don't compensate time
+- `auth required pam_otp.so noskewadj` # Don't compensate time
 skew automatically
 
 # SECURITY NOTES
@@ -151,12 +151,12 @@ skew automatically
 For highest security, make sure that both password and one-time code are being
 requested even if password and/or one-time code are incorrect. This means that
 *at least* the first of `pam_unix.so` (or whatever other module is used to
-verify passwords) and `pam_google_authenticator.so` should be set as
+verify passwords) and `pam_otp.so` should be set as
 **required**, not **requisite**.
 
 # SEE ALSO
 
-**google-authenticator**(1).
+**otp-config**(1).
 
-The Google Authenticator source code and all documentation may be downloaded
-from <https://github.com/google/google-authenticator-libpam>.
+The PAM OTP source code and all documentation may be downloaded
+from <https://github.com/krayon/libpam-otp>.

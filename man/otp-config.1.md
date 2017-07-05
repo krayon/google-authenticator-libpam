@@ -1,25 +1,25 @@
-% GOOGLE-AUTHENTICATOR(1) Google two-factor authentication user manual
+% OTP-CONFIG(1) OTP two-factor authentication user manual
 
 # NAME
 
-google-authenticator - initialize one-time passcodes for the current user
+otp-config - initialize one-time passcodes for the current user
 
 # SYNOPSIS
 
-google-authenticator [*options*]
+otp-config [*options*]
 
-If no option is provided on the command line, google-authenticator(1) will ask
+If no option is provided on the command line, otp-config(1) will ask
 interactively the user for the more important options.
 
 # DESCRIPTION
 
-The google-authenticator(1) command creates a new secret key in the current
+The otp-config(1) command creates a new secret key in the current
 user's home directory. By default, this secret key and all settings will be
-stored in `~/.google_authenticator`.
+stored in `~/.otp_config`.
 
 If the system supports the `libqrencode` library, a QRCode will be shown, that
 can be scanned using the Android Google Authenticator application. If the
-system does not have this library, google-authenticator(1) outputs an URL that
+system does not have this library, otp-config(1) outputs an URL that
 can be followed using a web browser. Alternatively, the alphanumeric secret key
 is also outputed and thus can be manually entered into the Android Google
 Authenticator application.
@@ -28,12 +28,12 @@ In either case, after the key has been added, the verification value should be
 checked. To do that, the user must click-and-hold the added entry on its
 Android system until the context menu shows. Then, the user checks that the
 displayed key's verification value matches the one provided by
-google-authenticator(1). Please note that this feature might not be available
+otp-config(1). Please note that this feature might not be available
 in all builds of the Android application.
 
 Each time the user logs into the system, he will now be prompted for the TOTP
 code (time based one-time-password) or HOTP (counter-based one-time-password),
-depending on options given to google-authenticator(1), after having entered its
+depending on options given to otp-config(1), after having entered its
 normal user id and its normal UNIX account password.
 
 # OPTIONS
@@ -152,5 +152,5 @@ Those settings are only relevant for time-based one-time-password (TOTP):
 
 # SEE ALSO
 
-The Google Authenticator source code and all documentation may be downloaded
-from <https://github.com/google/google-authenticator-libpam>.
+The OTP Config source code and all documentation may be downloaded
+from <https://github.com/krayon/libpam-otp>.

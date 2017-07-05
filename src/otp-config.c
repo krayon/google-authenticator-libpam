@@ -35,7 +35,7 @@
 #include "hmac.h"
 #include "sha1.h"
 
-#define SECRET                    "/.google_authenticator"
+#define SECRET                    "/.otp_config"
 #define SECRET_BITS               128         // Must be divisible by eight
 #define VERIFICATION_CODE_MODULUS (1000*1000) // Six digits
 #define SCRATCHCODES              5           // Default number of initial scratchcodes
@@ -388,7 +388,7 @@ static char *maybeAddOption(const char *msg, char *buf, size_t nbuf,
 
 static void usage(void) {
   puts(
- "google-authenticator [<options>]\n"
+ "otp-config [<options>]\n"
  " -h, --help                     Print this message\n"
  " -c, --counter-based            Set up counter-based (HOTP) verification\n"
  " -t, --time-based               Set up time-based (TOTP) verification\n"

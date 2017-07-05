@@ -96,7 +96,7 @@ int pam_get_item(const pam_handle_t *pamh, int item_type,
                  PAM_CONST void **item) {
   switch (item_type) {
     case PAM_SERVICE: {
-      static const char service[] = "google_authenticator_demo";
+      static const char service[] = "pam_otp_demo";
       *item = service;
       return PAM_SUCCESS;
     }

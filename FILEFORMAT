@@ -1,4 +1,4 @@
-All configuration data and state is kept in ~/.google_authenticator
+All configuration data and state is kept in ~/.otp_config
 The file is all ASCII, but is kept in a very simple-to-parse and rigid
 file format.
 

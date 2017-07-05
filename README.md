@@ -1,8 +1,8 @@
-# Google Authenticator PAM module
+# OTP PAM module
 
 Example PAM module demonstrating two-factor authentication.
 
-[![Build Status](https://travis-ci.org/google/google-authenticator-libpam.svg?branch=master)](https://travis-ci.org/google/google-authenticator-libpam)
+[![Build Status](https://travis-ci.org/krayon/libpam-otp.svg?branch=master)](https://travis-ci.org/krayon/libpam-otp)
 
 ## Build & install
 ```shell
@@ -20,7 +20,7 @@ to calling "make install".
 For highest security, make sure that both password and OTP are being requested
 even if password and/or OTP are incorrect. This means that *at least* the first
 of `pam_unix.so` (or whatever other module is used to verify passwords) and
-`pam_google_authenticator.so` should be set as `required`, not `requisite`. It
+`pam_otp.so` should be set as `required`, not `requisite`. It
 probably can't hurt to have both be `required`, but it could depend on the rest
 of your PAM config.
 
@@ -30,18 +30,18 @@ attempts.
 
 Add this line to your PAM configuration file:
 
-`  auth required pam_google_authenticator.so no_increment_hotp`
+`  auth required pam_otp.so no_increment_hotp`
 
 ## Setting up a user
 
-Run the `google-authenticator` binary to create a new secret key in your home
-directory. These settings will be stored in `~/.google_authenticator`.
+Run the `otp-config` binary to create a new secret key in your home
+directory. These settings will be stored in `~/.otp_config`.
 
 If your system supports the "libqrencode" library, you will be shown a QRCode
 that you can scan using the Android "Google Authenticator" application.
 
 If your system does not have this library, you can either follow the URL that
-`google-authenticator` outputs, or you have to manually enter the alphanumeric
+`otp-config` outputs, or you have to manually enter the alphanumeric
 secret key into the Android "Google Authenticator" application.
 
 In either case, after you have added the key, click-and-hold until the context
@@ -50,14 +50,14 @@ might not be available in all builds of the Android application).
 
 Each time you log into your system, you will now be prompted for your TOTP code
 (time based one-time-password) or HOTP (counter-based), depending on options
-given to `google-authenticator`, after having entered your normal user id and
+given to `otp-config`, after having entered your normal user id and
 your normal UNIX account password.
 
 During the initial roll-out process, you might find that not all users have
 created a secret key yet. If you would still like them to be able to log
 in, you can pass the "nullok" option on the module's command line:
 
-`  auth required pam_google_authenticator.so nullok`
+`  auth required pam_otp.so nullok`
 
 ## Encrypted home directories
 
@@ -66,10 +66,10 @@ password, you either have to re-arrange the entries in the PAM configuration
 file to decrypt the home directory prior to asking for the OTP code, or
 you have to store the secret file in a non-standard location:
 
-`  auth required pam_google_authenticator.so secret=/var/unencrypted-home/${USER}/.google_authenticator`
+`  auth required pam_otp.so secret=/var/unencrypted-home/${USER}/.otp_config`
 
 would be a possible choice. Make sure to set appropriate permissions. You also
-have to tell your users to manually move their .google_authenticator file to
+have to tell your users to manually move their .otp_config file to
 this location.
 
 In addition to "${USER}", the `secret=` option also recognizes both "~" and
@@ -94,7 +94,7 @@ See "encrypted home directories", above.
 Overrides default token prompt. If you want to include spaces in the prompt,
 wrap the whole argument in square brackets:
 
-`  auth required pam_google_authenticator.so [authtok_prompt=Your secret token: ]`
+`  auth required pam_otp.so [authtok_prompt=Your secret token: ]`
 
 ### user=some-user
 
@@ -130,14 +130,14 @@ Enable more verbose log messages in syslog.
 
 Some PAM clients cannot prompt the user for more than just the password. To
 work around this problem, this PAM module supports stacking. If you pass the
-`forward_pass` option, the `pam_google_authenticator` module queries the user
+`forward_pass` option, the `pam_otp` module queries the user
 for both the system password and the verification code in a single prompt.
 It then forwards the system password to the next PAM module, which will have
 to be configured with the `use_first_pass` option.
 
-In turn, `pam_google_authenticator` module also supports both the standard
+In turn, `pam_otp` module also supports both the standard
 `use_first_pass` and `try_first_pass` options. But most users would not need
-to set those on the `pam_google_authenticator`.
+to set those on the `pam_otp`.
 
 ### noskewadj
 
@@ -152,7 +152,7 @@ Some administrators prefer that time skew isn't adjusted automatically, as
 doing so results in a slightly less secure system configuration. If you want
 to disable it, you can do so on the module command line:
 
-`  auth required pam_google_authenticator.so noskewadj`
+`  auth required pam_otp.so noskewadj`
 
 ### no_increment_hotp
 
@@ -171,7 +171,7 @@ different behavior. Pass the `echo_verification_code` option to the module
 in order to enable echoing.
 
 If you would like verification codes that are counter based instead of
-timebased, use the `google-authenticator` binary to generate a secret key in
+timebased, use the `otp-config` binary to generate a secret key in
 your home directory with the proper option.  In this mode, clock skew is
 irrelevant and the window size option now applies to how many codes beyond the
 current one that would be accepted, to reduce synchronization problems.

@@ -79,7 +79,7 @@ int pam_get_item(const pam_handle_t *pamh, int item_type,
                  PAM_CONST void **item) {
   switch (item_type) {
     case PAM_SERVICE: {
-      static const char *service = "google_authenticator_unittest";
+      static const char *service = "pam_otp_unittest";
       *item = service;
       return PAM_SUCCESS;
     }
@@ -209,7 +209,7 @@ int main(int argc, char *argv[]) {
 
   // Load the PAM module
   puts("Loading PAM module");
-  pam_module = dlopen("./.libs/libpam_google_authenticator_testing.so",
+  pam_module = dlopen("./.libs/libpam_otp_testing.so",
                       RTLD_NOW | RTLD_GLOBAL);
   if (pam_module == NULL) {
     fprintf(stderr, "dlopen(): %s\n", dlerror());
@@ -233,7 +233,7 @@ int main(int argc, char *argv[]) {
 
   for (int otp_mode = 0; otp_mode < 8; ++otp_mode) {
     // Create a secret file with a well-known test vector
-    char fn[] = "/tmp/.google_authenticator_XXXXXX";
+    char fn[] = "/tmp/.otp_config_XXXXXX";
     mode_t orig_umask = umask(S_IRWXG|S_IRWXO); // Only for the current user.
     int fd = mkstemp(fn);
     (void)umask(orig_umask);

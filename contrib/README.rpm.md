@@ -1,4 +1,4 @@
-## Building a Google-Authenticator RPM
+## Building a OTP PAM RPM
 
 Please note the RPM does not require QR-Encode as a dependency,
 As technically the module builds fine without it. But in all likely-
@@ -9,7 +9,7 @@ documentation for instructions. https://github.com/fukuchi/libqrencode
 If you are using RPMs in your testing a new build number option has
 been added to the spec file IE: --define '_release #' to where # is
 a build number. This will generate a RPM in the  namespace:
-google-authenticator-1.01-#.el6.x86_64.rpm where # is your specified
+libpam-otp-1.01-#.el6.x86_64.rpm where # is your specified
 build number. If no _release is set the build is defaulted to 1.
 Example:
 
@@ -20,7 +20,7 @@ rpmbuild -ba contrib/rpm.spec --define '_release 8'
 This will generate an rpm of:
 
 ```
-google-authenticator-1.01-8.el6.x86_64.rpm
+libpam-otp-1.01-8.el6.x86_64.rpm
 ```
 
 ### Requirements
@@ -37,11 +37,11 @@ google-authenticator-1.01-8.el6.x86_64.rpm
 ### Process
 
 ```shell
-git clone https://github.com/google/google-authenticator-libpam.git
-cd google-authenticator/libpam
+git clone https://github.com/krayon/libpam-otp.git
+cd libpam-otp/libpam
 ./bootstrap.sh
 ./configure
 make dist
-cp google-autheticator-#.##.tar.gz ~/rpmbuild/SOURCES/
+cp libpam-otp-#.##.tar.gz ~/rpmbuild/SOURCES/
 rpmbuild -ba contrib/rpm.spec
 ```

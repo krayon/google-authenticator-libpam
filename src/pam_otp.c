@@ -52,8 +52,8 @@
 #include "hmac.h"
 #include "sha1.h"
 
-#define MODULE_NAME   "pam_google_authenticator"
-#define SECRET        "~/.google_authenticator"
+#define MODULE_NAME   "pam_otp"
+#define SECRET        "~/.otp_config"
 #define CODE_PROMPT   "Verification code: "
 #define PWCODE_PROMPT "Password & verification code: "
 
@@ -153,7 +153,7 @@ static const char *get_user_name(pam_handle_t *pamh, const Params *params) {
     return NULL;
   }
   if (params->debug) {
-    log_message(LOG_INFO, pamh, "debug: start of google_authenticator for \"%s\"", username);
+    log_message(LOG_INFO, pamh, "debug: start of OTP for \"%s\"", username);
   }
   return username;
 }
@@ -353,7 +353,7 @@ static int drop_privileges(pam_handle_t *pamh, const char *username, int uid,
 static int open_secret_file(pam_handle_t *pamh, const char *secret_filename,
                             struct Params *params, const char *username,
                             int uid, struct stat *orig_stat) {
-  // Try to open "~/.google_authenticator"
+  // Try to open "~/.otp_config"
   int fd = open(secret_filename, O_RDONLY);
   if (fd < 0 ||
       fstat(fd, orig_stat) < 0) {
@@ -379,7 +379,7 @@ static int open_secret_file(pam_handle_t *pamh, const char *secret_filename,
                 orig_stat->st_mode & 03777, params->allowed_perm);
   }
 
-  // Check permissions on "~/.google_authenticator".
+  // Check permissions on "~/.otp_config".
   if (!S_ISREG(orig_stat->st_mode)) {
     log_message(LOG_ERR, pamh, "Secret file \"%s\" is not a regular file",
                 secret_filename);
@@ -1537,7 +1537,7 @@ static int parse_args(pam_handle_t *pamh, int argc, const char **argv,
   return 0;
 }
 
-static int google_authenticator(pam_handle_t *pamh, int flags,
+static int otp(pam_handle_t *pamh, int flags,
                                 int argc, const char **argv) {
   int        rc = PAM_AUTH_ERR;
   const char *username;
@@ -1741,7 +1741,7 @@ static int google_authenticator(pam_handle_t *pamh, int flags,
 
     // Display a success or error message
     if (rc == PAM_SUCCESS) {
-      log_message(LOG_INFO , pamh, "Accepted google_authenticator for %s", username);
+      log_message(LOG_INFO , pamh, "Accepted OTP for %s", username);
     } else {
       log_message(LOG_ERR, pamh, "Invalid verification code for %s", username);
     }
@@ -1808,7 +1808,7 @@ static int google_authenticator(pam_handle_t *pamh, int flags,
 
 PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags,
                                    int argc, const char **argv) {
-  return google_authenticator(pamh, flags, argc, argv);
+  return otp(pamh, flags, argc, argv);
 }
 
 PAM_EXTERN int pam_sm_setcred(pam_handle_t *pamh, int flags, int argc,
